@@ -1,4 +1,7 @@
-﻿namespace Customer_management;
+﻿using Customer_management.DbOperation;
+using Microsoft.EntityFrameworkCore;
+
+namespace Customer_management;
 
 public class Startup
 {
@@ -14,6 +17,8 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddDbContext<CustomerManagementDbContext>(options =>
+            options.UseInMemoryDatabase("CustomerManagementDB"));
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
