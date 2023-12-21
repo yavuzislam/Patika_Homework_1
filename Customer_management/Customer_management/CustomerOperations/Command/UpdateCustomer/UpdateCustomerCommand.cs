@@ -1,16 +1,19 @@
-﻿using Customer_management.DbOperation;
+﻿using AutoMapper;
+using Customer_management.DbOperation;
 
 namespace Customer_management.CustomerOperations.Command.UpdateCustomer;
 
 public class UpdateCustomerCommand
 {
     private readonly CustomerManagementDbContext _context;
+    private readonly IMapper _mapper;
     public UpdateCustomerModel Model { get; set; }
     public int CustomerId { get; set; }
 
-    public UpdateCustomerCommand(CustomerManagementDbContext context)
+    public UpdateCustomerCommand(CustomerManagementDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public void Handle()
