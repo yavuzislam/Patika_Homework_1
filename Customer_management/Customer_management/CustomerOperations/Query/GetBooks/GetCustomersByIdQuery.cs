@@ -1,4 +1,5 @@
-﻿using Customer_management.Common;
+﻿using AutoMapper;
+using Customer_management.Common;
 using Customer_management.DbOperation;
 
 namespace Customer_management.CustomerOperations.Query.GetBooks;
@@ -6,12 +7,14 @@ namespace Customer_management.CustomerOperations.Query.GetBooks;
 public class GetCustomersByIdQuery
 {
     private readonly CustomerManagementDbContext _context;
+    private readonly IMapper _mapper;
 
     public int CustomerId { get; set; }
 
-    public GetCustomersByIdQuery(CustomerManagementDbContext context)
+    public GetCustomersByIdQuery(CustomerManagementDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public GetCustomerViewModel Handle()
@@ -22,15 +25,7 @@ public class GetCustomersByIdQuery
             throw new InvalidOperationException("Customer not found");
         }
 
-        var model = new GetCustomerViewModel()
-        {
-            FullName = customer.Name + " " + customer.Surname,
-            BirthDate = customer.BirthDate.Date.ToString("dd/MM/yyyy"),
-            Job = customer.Job,
-            Country = customer.Country,
-            IncomeLevel = ((IncomeLevelType)customer.IncomeLevelId).ToString(),
-            MartialStatus = ((MartialStatusType)customer.MartialStatusId).ToString()
-        };
+        var model= _mapper.Map<GetCustomerViewModel>(customer);
         return model;
     }
 }
