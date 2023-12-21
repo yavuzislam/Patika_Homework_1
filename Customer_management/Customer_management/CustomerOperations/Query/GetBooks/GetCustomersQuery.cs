@@ -1,4 +1,4 @@
-﻿using Customer_management.Common;
+﻿using AutoMapper;
 using Customer_management.DbOperation;
 
 namespace Customer_management.CustomerOperations.Query.GetBooks;
@@ -6,28 +6,22 @@ namespace Customer_management.CustomerOperations.Query.GetBooks;
 public class GetCustomersQuery
 {
     private readonly CustomerManagementDbContext _dbContext;
+    private readonly IMapper _mapper;
 
-    public GetCustomersQuery(CustomerManagementDbContext dbContext)
+    public GetCustomersQuery(CustomerManagementDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
+        _mapper = mapper;
     }
 
-    public List<CustomersViewModel> Handle()
+    public IEnumerable<CustomersViewModel> Handle()
     {
-        var customerList = _dbContext.Customers.ToList();
-
-        return customerList.Select(customer => new CustomersViewModel()
-            {
-                FullName = customer.Name + " " + customer.Surname,
-                BirthDate = customer.BirthDate.Date.ToString("dd/MM/yyyy"),
-                Job = customer.Job,
-                Country = customer.Country,
-                IncomeLevel = ((IncomeLevelType)customer.IncomeLevelId).ToString(),
-                MartialStatus = ((MartialStatusType)customer.MartialStatusId).ToString()
-            })
-            .ToList();
+        var customerList = _dbContext.Customers.OrderBy(x => x.Id).ToList();
+        var vm = _mapper.Map<List<CustomersViewModel>>(customerList);
+        return vm;
     }
 }
+
 public class CustomersViewModel
 {
     public string FullName { get; set; }
