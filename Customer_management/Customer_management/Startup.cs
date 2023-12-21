@@ -1,4 +1,6 @@
-﻿using Customer_management.DbOperation;
+﻿using System.Reflection;
+using Customer_management.DbOperation;
+using Customer_management.Middlewares;
 using Microsoft.EntityFrameworkCore;
 
 namespace Customer_management;
@@ -17,8 +19,10 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+
         services.AddDbContext<CustomerManagementDbContext>(options =>
             options.UseInMemoryDatabase("CustomerManagementDB"));
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -35,6 +39,8 @@ public class Startup
         app.UseRouting();
 
         app.UseAuthorization();
+
+        app.UseCustomExceptionMiddleware();
 
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }
