@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Customer_management.DbOperation;
 using Customer_management.Middlewares;
+using Customer_management.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Customer_management;
@@ -23,6 +24,8 @@ public class Startup
         services.AddDbContext<CustomerManagementDbContext>(options =>
             options.UseInMemoryDatabase("CustomerManagementDB"));
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+        services.AddSingleton<ILoggerService, ConsoleLogger>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
